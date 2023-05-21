@@ -53,7 +53,7 @@ void averageSum_reduction(int *a,int n){
 
 int main(){
     int *a,n;
-    cout<<"Enter the number or element \n";
+    cout<<"Enter the number of element \n";
     cin>>n;
     a = new int[n];
     for(int i =0;i<n;i++){
