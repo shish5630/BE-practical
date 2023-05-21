@@ -1,63 +1,36 @@
 #include<bits/stdc++.h>
+#include<stdlib.h>
 #include<omp.h>
-
 using namespace std;
 
-void merge(vector<int>&arr,int left ,int middle,int right){
-    vector<int>L(arr.begin()+left,arr.begin()+middle+1);
-    vector<int>R(arr.begin()+middle+1,arr.begin()+right+1);
-    
-    int i=0;int j=0;int k=left;
-    while(i<L.size()&& j<R.size()){
-        if(L[i]<R[j]){
-            arr[k++] = L[i++];
-        }
-        else{
-            arr[k++] = R[j++];
-        }
+void bubble(int *a,int n){
+    for(int i =0;i<n;i++){
+        int first  = i%2;
+        #pragma omp parallel for shared(a,first)
+        
+            for(int j =first;j<n-1;j+=2){
+                if(a[j]>a[j+1]){
+                    swap(a[j],a[j+1]);
+                }
+            }
     }
-    while(i<L.size()){
-        arr[k++] = L[i++];
-    }
-    while(j<R.size()){
-        arr[k++] = R[j++];
-    }
-    
 }
-
-
-void mergeSort(vector<int>&arr,int left,int right){
-    if(left>=right){
-        return;
-    }
-    int middle = left+(right-left)/2;
-    #pragma omp parallel sections
-    {
-        #pragma omp parallel section
-        {
-            mergeSort(arr,left,middle);
-        }
-        #pragma omp parallel section
-        {
-            mergeSort(arr,middle+1,right);
-        }
-    }
-    merge(arr,left,middle,right);
-}
-
 
 int main(){
-    int n;
-    cout<<"Enter the number of elements";
+    int *a ,n;
+    cout<<"Enter the number of element";
+    
     cin>>n;
-    vector<int>arr(n);
+    a = new int[n];
+    cout<<"enter teh elemment \n";
     for(int i =0;i<n;i++){
-        cin>>arr[i];
+        cin>>a[i];
     }
-    mergeSort(arr,0,n-1);
-    cout<<"Sorted array as follows \n";
-    for(auto x:arr){
-        cout<<x<<" ";
+    bubble(a,n);
+    cout<<"sorted array is as follows\n";
+    for(int  i=0;i<n;i++){
+        cout<<a[i]<<" ";
     }
+    
     return 0;
 }
